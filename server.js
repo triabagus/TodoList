@@ -1,95 +1,47 @@
-// calling express library
 var express = require('express');
+var log = require('morgan')('dev');
+var bodyParser = require('body-parser');
+
+var properties = require('./config/property');
+var db = require('./config/database');
+
+// hero route
+var herosRoutes = require('./api/heroes/heroes.routes');
 var app = express();
-var bodyparser = require('body-parser');
-var mongoose = require('mongoose');
 
-// connecting mongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/todo', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-
-// creating model
-var TaskSchema = mongoose.Schema({
-    task: {
-        type: String
-    }
-}, {
-    collection: 'task'
-});
-var TaskModel = mongoose.model("TaskModel", TaskSchema);
-
-
-
-// configure app
-app.use('/app', express.static(__dirname + '/app')) //use static file
-app.use(bodyparser.json()); // for parsing  application json
-app.use(bodyparser.urlencoded({
+// configurate bodyparser
+var bodyParserJSON = bodyParser.json();
+var bodyParserURLEncoded = bodyParser.urlencoded({
     extended: true
-})); // for parsing application/x-www-form-urlencoded
-
-
-// GET request
-app.get('/', function (req, res) {
-    res.sendfile('app/index.html')
 });
 
-// POST request to save todo task in database
-app.post("/api/create/todo", createTodo);
+// initialize express route
+var router = express.Router();
 
-function createTodo(req, res) {
-    var todoTask = req.body;
-    // console.log(todoTask)
+// call the database connection function
+db();
 
-    //save the todoTask in db
-    TaskModel
-        .create(todoTask)
-        .then(
-            function (success) {
-                console.log('Success');
-            },
-            function (error) {
-                console.log('Error');
-            }
-        )
+// configurate app.use()
+app.use(log);
+app.use(bodyParserJSON);
+app.use(bodyParserURLEncoded);
 
-    res.json(todoTask);
-}
+// Error handling
+app.use(function (req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization");
+    next();
+});
 
-// GET all task
-app.get('/api/get/tasks', getAllTasks)
+//use express route
+app.use('/api', router);
 
-function getAllTasks(req, res) {
-    TaskModel.find().then(
-        function (tasks) {
-            res.json(tasks)
-        },
-        function (err) {
-            res.sendStatus(400)
-        }
-    )
-}
+//call heros routing
+herosRoutes(router);
 
-// DELETE task
-app.delete('/api/delete/task/:id', deleteTask)
-
-function deleteTask(req, res) {
-    var taskId = req.params.id
-    //console.log(taskId);
-    TaskModel.remove({
-        _id: mongoose.Types.ObjectId(taskId)
-    }).then(
-        function () {
-            res.sendStatus(200)
-        },
-        function () {
-            res.sendStatus(400)
-        }
-    )
-}
-
-
-app.listen('8080', function () {
-    console.log('Server Running http://localhost:8080');
-})
+// initial server
+app.listen(properties.PORT, (req, res) => {
+    console.log(`Server is running on ${properties.PORT} port.`);
+});

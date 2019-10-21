@@ -1,0 +1,96 @@
+body {
+    background: #f9f9f9;
+    font-family: 'Roboto', sans-serif;
+}
+
+.container {
+    width: 600px;
+    text-align: center;
+    margin: 40px auto;
+}
+
+h3 {
+    color: #1cb7b0;
+    font-size: 3em;
+    letter-spacing: .1em;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+h4 {
+    font-size: 1em;
+    margin-top: 0;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+}
+
+#frame {
+    display: flex;
+    flex-wrap: wrap;
+    width: 600px;
+    background: #ffff;
+    padding: 10px;
+    margin: 0 auto;
+    text-align: left;
+    border-radius: 20px;
+    box-shadow: 2px 9px 25px -5px #ccc;
+}
+
+.button {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: right;
+    display: none;
+}
+
+.delete {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border: 1px solid #ececec;
+    color: red;
+    display: inline-block;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.icon {
+    background: #eaeaea;
+    border-radius: 50%;
+    font-size: 22px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.list {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+h5.sender {
+    margin: 0;
+}
+
+h6.title {
+    margin: 5px 0 7px;
+    font-size: 12px;
+}
+
+p {
+    margin: 0;
+    font-size: 12px;
+}
+
+.content {
+    margin-left: 15px;
+}
+
+.active {
+    background: red;
+    color: #fff;
+}
