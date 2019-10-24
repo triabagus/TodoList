@@ -26,9 +26,14 @@ heroSchema.statics = {
 
     delete: function (query, cb) {
         this.findOneAndDelete(query, cb);
-    }
+    },
 
+    deleteMany: function (query, cb) {
+        this.remove(query, cb);
+    }
 }
 
 var herosModel = mongoose.model('Heroes', heroSchema);
 module.exports = herosModel;
+
+// this collection heroes => db.heroes.find().pretty();

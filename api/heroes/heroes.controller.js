@@ -17,9 +17,10 @@ exports.createHero = function (req, res, next) {
             });
         }
 
-        res.json({
-            notification: "Hero created succesfully"
-        });
+        // res.json({
+        //     notification: "Hero created succesfully"
+        // });
+        res.redirect('/api/get');
 
     });
 }
@@ -34,7 +35,11 @@ exports.getHeros = function (req, res, next) {
             });
         }
 
-        res.json({
+        // res.json({
+        //     heros: heros
+        // });
+
+        res.render('index', {
             heros: heros
         });
     });
@@ -99,4 +104,40 @@ exports.removeHero = function (req, res, next) {
             notification: "Hero delete successfully"
         });
     });
+}
+
+// delete many
+exports.deleteHero = function (req, res, next) {
+    var dataBody = req.body;
+    var jsonData = JSON.stringify(dataBody);
+    dataBody = jsonData.replace(/:|"|{|}|/g, '');
+
+    var arr = [];
+    arr = dataBody.split(",");
+
+    Heros.deleteMany({
+        _id: {
+            '$in': arr
+        }
+    }, function (err, hero) {
+
+        if (err) {
+            res.json({
+                error: err
+            });
+        }
+
+        // res.json({
+        //     notification: "Hero delete successfully"
+        // });
+
+
+    });
+
+    res.redirect('/api/get');
+    res.send({
+        status: true,
+        url: "/api/get"
+    });
+
 }
